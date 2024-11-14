@@ -1,6 +1,8 @@
-# ![Fobos logo](logo/logo-square.svg) Fobos
+# Fobos
 
 Fobos is a Lua 5.1 to JavaScript transpiler, written in Lua 5.1.
+
+[Discord Server](https://discord.gg/TWbdwawN)
 
 **A notice --** Fobos is not designed to port existing Lua software to JavaScript. Its main purpose is to introduce Lua as a language for web development.
 
@@ -11,10 +13,24 @@ Fobos is a Lua 5.1 to JavaScript transpiler, written in Lua 5.1.
 ### Missing
 
 - Standard library
+- `goto`
+- Support for global variables (this is oddly confusing to port?)
+    - Use toplevel locals instead
 
 ### Inaccurate
 
-- Table expressions will not handle unpacked values correctly: `{table.unpack({1, 2})}` would be `{1}`.
+- Table expressions will not handle unpacked values correctly: `{table.unpack({1, 2})}` would be `{1}`
+
+### Notes
+
+- All Lua variables are prefixed with `l$`
+    - This means you must prefix your JS variables with `l$` to introduce them to the Lua namespace
+- Tables cannot be indexed like JS objects from JS
+    - Use `index_`/`newindex_` or `rawget`/`rawset` for this (the latter functions do not respect metamethods)
+- JS objects cannot be indexed like tables from Lua
+    - To work around this, define helper functions for getting (`(obj, key) => [obj[key]]`) and setting (`(obj, key, value) => [obj[key] = value]`)
+- Functions must return arrays to be used in Lua
+    - This means Functions must *always* return. To prevent errors, you can put `return []` at the ends of your JS functions
 
 ## Post-ES5 features used
 
