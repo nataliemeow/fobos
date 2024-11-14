@@ -1,4 +1,4 @@
-# ![Fobos logo](logos/logo-square.svg) Fobos
+# ![Fobos logo](logo/logo-square.svg) Fobos
 
 Fobos is a Lua 5.1 to JavaScript transpiler, written in Lua 5.1.
 
