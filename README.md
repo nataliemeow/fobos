@@ -30,7 +30,7 @@ Fobos is a Lua 5.1 to JavaScript transpiler, written in Lua 5.1.
 - JS objects cannot be indexed like tables from Lua
     - To work around this, define helper functions for getting (`(obj, key) => [obj[key]]`) and setting (`(obj, key, value) => [obj[key] = value]`)
 - Functions must return arrays to be used in Lua
-    - This means Functions must *always* return. To prevent errors, you can put `return []` at the ends of your JS functions
+    - This means functions must *always* return. To prevent errors, you can put `return []` at the ends of your JS functions
 
 ## Post-ES5 features used
 
