@@ -1,10 +1,11 @@
-<center><img src="logo/logo-full.svg" alt="the Fobos logo, showing a square with a halo and a big 'FO' symbol orbiting around it" width=550 >
+<div align="center"><img src="logo/logo-full.svg" alt="the Fobos logo, showing a square with a halo and a big 'FO' symbol orbiting around it" width=550 >
 
 ---
 
-Fobos is a **Lua 5.1 to JavaScript transpiler**, written in Lua 5.1.
-<br>[Discord Server](https://discord.gg/TWbdwawN) | [Website](https://nat.envs.sh/fobos)
-</center>
+Fobos is a **Lua 5.1 to JavaScript transpiler**, written in Lua 5.1.<br>
+[Discord Server](https://discord.gg/TWbdwawN) | [Website](https://nat.envs.sh/fobos)
+
+</div>
 
 > [!IMPORTANT]
 > Fobos is **not designed** to port existing Lua software to JavaScript. It's main purpose is to introduce Lua as a language for web development.
