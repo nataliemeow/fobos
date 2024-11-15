@@ -23,7 +23,7 @@ class LuaError extends Error { }
 
 const tableProto = {};
 
-const makeTable = (entries) => {
+const makeTable = (entries, restKey, restValues) => {
 	// we use a prototype to configure an object as a table, see luaType
 	const table = Object.create(tableProto);
 	// tables use a combination of an object, an array and a Map to store their fields; see rawget and rawset
@@ -34,6 +34,10 @@ const makeTable = (entries) => {
 
 	for (const [key, value] of entries)
 		rawset(table, key, value);
+
+	if (restKey)
+		for (const [dKey, value] of restValues.entries())
+			rawset(table, restKey + dKey, value);
 
 	return table;
 };

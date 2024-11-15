@@ -1,5 +1,5 @@
 -- Copyright (c) 2024 nataliemeow
--- 
+--
 -- This software is provided 'as-is', without any express or implied
 -- warranty. In no event will the authors be held liable for any damages
 -- arising from the use of this software.
@@ -7,7 +7,7 @@
 -- Permission is granted to anyone to use this software for any purpose,
 -- including commercial applications, and to alter it and redistribute it
 -- freely, subject to the following restrictions:
--- 
+--
 -- 1. The origin of this software must not be misrepresented; you must not
 --    claim that you wrote the original software. If you use this software
 --    in a product, an acknowledgment in the product documentation would be
@@ -47,12 +47,11 @@ function pack(nodes)
 	for i, node in ipairs(nodes) do
 		if i ~= 1 then js = js .. ',' end
 		local tag = node.tag
-		-- the two nodes that compile to tuples
-		if tag == 'Call' or tag == 'Dots' or tag == 'Invoke' then
+		if isTuple(node) then
 			if i == #nodes then
-				js = js .. '...' .. comp(node)
+				js = js .. all(node)
 			else
-				js = js .. comp(node) .. '[0]'
+				js = js .. first(node)
 			end
 		else
 			js = js .. comp(node)
@@ -61,13 +60,24 @@ function pack(nodes)
 	return js
 end
 
-function first(node)
+function isTuple(node)
 	local tag = node.tag
-	if tag == 'Call' or tag == 'Dots' or tag == 'Invoke' then
-		return comp(node) .. '[0]'
-	else
-		return comp(node)
-	end
+	return tag == 'Call' or tag == 'Dots' or tag == 'Invoke'
+end
+
+function first(node)
+	if isTuple(node) then return comp(node) .. '[0]'
+	else return comp(node) end
+end
+
+function all(node)
+	if isTuple(node) then return '...' .. comp(node)
+	else return comp(node) end
+end
+
+function allArr(node)
+	if isTuple(node) then return comp(node)
+	else return '[' .. comp(node) .. ']' end
 end
 
 function comp(node)
@@ -167,7 +177,6 @@ function comp(node)
 
 	if tag == 'Nil' then return 'void 0' end
 	if tag == 'True' then return '!0' end
-	-- the funny
 	if tag == 'False' then return '!3' end
 	if tag == 'Number' then return tostring(node[1]) end
 	if tag == 'String' then return ('%q'):format(node[1]) end
@@ -175,17 +184,26 @@ function comp(node)
 	if tag == 'Table' then
 		local ti = 1
 		local js = 'makeTable(['
+
+		local len = #node
 		for i, entry in ipairs(node) do
 			if i ~= 1 then js = js .. ',' end
 			if entry.tag == 'Pair' then
 				local key, value = unpack(entry)
-				js = js .. '[' .. comp(key) .. ',' .. comp(value) .. ']'
-			else
-				js = js .. '[' .. ti .. ',' .. comp(entry) .. ']'
+				js = js .. '[' .. first(key) .. ',' .. first(value) .. ']'
+			elseif i ~= len then
+				js = js .. '[' .. ti .. ',' .. first(entry) .. ']'
 				ti = ti + 1
 			end
 		end
-		js = js .. '])'
+
+		js = js .. ']'
+		local rest = node[#node]
+		if rest.tag ~= 'Pair' then
+			js = js .. ',' .. ti .. ',' .. allArr(rest)
+		end
+		js = js .. ')'
+
 		return js
 	end
 
