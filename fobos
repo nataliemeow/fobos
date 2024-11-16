@@ -1,0 +1,11 @@
+#!/bin/sh
+cd "$(dirname "$0")/src"
+if luajit -v > /dev/null; then
+	luajit main.lua $@
+elif lua5.1 -v > /dev/null; then
+	lua5.1 main.lua $@
+elif lua51 -v > /dev/null; then
+	lua51 main.lua $@
+else
+	>&2 echo "$0: Lua is not installed"
+fi
